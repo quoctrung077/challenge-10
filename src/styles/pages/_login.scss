@@ -1,0 +1,132 @@
+@use "../base/variables" as *;
+
+.login {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--background-base, #ffffff);
+  overflow-x: hidden;
+  &__container {
+    height: fit-content;
+    padding-bottom: 32px;
+    border-radius: 8px;
+    row-gap: normal;
+    color: white;
+    background-color: var(--background-base, #ffffff);
+    max-width: 734px;
+    width: 100%;
+  }
+
+  &__line {
+    margin: 32px 100px;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+    border-image: initial;
+    border-top: 1px solid rgb(41, 41, 41);
+  }
+
+  &__box {
+    background: linear-gradient(rgba(255, 255, 255, 0.1) 0%, rgb(0, 0, 0) 100%);
+    flex: 3 1 0%;
+    display: flex;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  &__logo-wrapper {
+    padding-top: 32px;
+    padding-bottom: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__logo {
+    height: 36px;
+  }
+
+  &__title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 32px;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  &__form {
+    width: 324px;
+    margin: 0 auto;
+    padding-bottom: 0;
+  }
+
+  &__signup-text {
+    color: #b3b3b3;
+    font-size: 1rem;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__signup-link {
+    margin-left: 4px;
+    color: white !important;
+    font-size: 1rem;
+    font-weight: 400;
+    text-decoration: underline !important;
+    transition: transform 0.3 ease;
+    &:hover {
+      text-decoration: underline;
+      transform: scale(1.02);
+    }
+  }
+
+  &__form-item-error {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  &__form-alert {
+    display: flex;
+    color: white;
+    font-size: 0.87rem;
+    padding: 8px;
+    .icon__erro {
+      margin-right: 8px;
+    }
+  }
+
+  &__error-alert {
+    background: #e91429;
+    border: none;
+    border-radius: 0;
+    margin: 0 50px;
+  }
+
+  &__form-item-group {
+    padding-bottom: 8px;
+    color: white;
+  }
+
+  &__footer {
+    color: #b3b3b3;
+    text-align: center;
+    padding: 32px;
+    font-weight: 400;
+    font-size: 0.75rem;
+    &-link {
+      color: #b3b3b3;
+    }
+  }
+  .login__form .ant-form-item-required {
+    display: none;
+  }
+}
+
+.icon__error {
+  margin-right: 8px;
+  fill: currentColor;
+}

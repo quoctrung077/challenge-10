@@ -1,0 +1,15 @@
+.lable {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  &--group {
+    padding-bottom: 8px;
+  }
+  &__text {
+    color: white;
+  }
+  &__inliner {
+    color: white;
+    display: inline-block;
+  }
+}

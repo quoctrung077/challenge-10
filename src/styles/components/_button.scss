@@ -1,0 +1,21 @@
+.btn {
+  background-color: #1db954;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  min-block-size: 48px;
+  color: #000000;
+  font-size: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  &__text {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  &--login:hover {
+    background: #3be477 !important;
+    transform: scale(1.04);
+  }
+}
