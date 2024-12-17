@@ -34,6 +34,123 @@ const SignUp: React.FC = () => {
     setCurrentStep(currentStep - 1);
   };
 
+  const steps = [
+    {
+      title: `Step 1 of 3`,
+      description: 'Enter your email',
+    },
+    {
+      title: 'Step 2 of 3',
+      description: 'Create a password',
+    },
+    {
+      title: 'Step 3 of 3',
+      description: 'Enter your name',
+    },
+  ];
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <Form.Item
+            className="signup__form-item-group"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: (
+                  <span className="signup__form-item-error">
+                    <svg
+                      width="24"
+                      data-encore-id="icon"
+                      role="img"
+                      aria-label="Error:"
+                      aria-hidden="true"
+                      className="icon__error"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
+                      <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
+                    </svg>
+                    This email is invalid. Make sure it's written like example@email.com
+                  </span>
+                ),
+              },
+            ]}
+            validateStatus={debouncedEmail && !isEmailValid ? "error" : ""}
+            help={debouncedEmail && !isEmailValid ? "This email is invalid" : null}
+          >
+            <div>
+              <Lable text="Email" id="signup-email"></Lable>
+              <InputField
+                id="signup-email"
+                placeholder="name@domain.com"
+                className="signup__input"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </Form.Item>
+        );
+
+      case 2:
+        return (
+          <Form.Item
+            className="signup__form-item-group"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Password is required",
+              },
+            ]}
+            validateStatus={debouncedPassword && !isPasswordValid ? "error" : ""}
+            help={debouncedPassword && !isPasswordValid ? "10 characters minimum" : null}
+          >
+            <div>
+              <Lable text="Create password" id="signup-password"></Lable>
+              <InputField
+                id="signup-password"
+                type="password"
+                placeholder="Create a password"
+                className="signup__input"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </Form.Item>
+        );
+
+      case 3:
+        return (
+          <Form.Item
+            className="signup__form-item-group"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Name is required",
+              },
+            ]}
+            validateStatus={debouncedName && !isNameValid ? "error" : ""}
+            help={debouncedName && !isNameValid ? "Enter a name for your profile" : null}
+          >
+            <div>
+              <Lable text="Name" id="signup-name"></Lable>
+              <InputField
+                id="signup-name"
+                placeholder="Enter your name"
+                className="signup__input"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+          </Form.Item>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="main">
       <header className="header">
@@ -58,250 +175,45 @@ const SignUp: React.FC = () => {
       </header>
       <section className="signup">
         <div className="signup__container">
-          <h1 className="signup__title">Sign up to start listening</h1>
-          {currentStep === 1 && (
-            <Form
-              className="signup__form"
-              name="signup"
-              initialValues={{ remember: true }}
-              layout="vertical"
-            >
-              <Form.Item
-                className="signup__form-item-group"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <span className="signup__form-item-error">
-                        <svg
-                          width="24"
-                          data-encore-id="icon"
-                          role="img"
-                          aria-label="Error:"
-                          aria-hidden="true"
-                          className="icon__error"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
-                          <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
-                        </svg>
-                        This email is invalid. Make sure it's written like
-                        example@email.com
-                      </span>
-                    ),
-                  },
-                ]}
-                validateStatus={debouncedEmail && !isEmailValid ? "error" : ""}
-                help={
-                  debouncedEmail && !isEmailValid ? (
-                    <span className="signup__form-item-error">
-                      <svg
-                        width="24"
-                        data-encore-id="icon"
-                        role="img"
-                        aria-label="Error:"
-                        aria-hidden="true"
-                        className="icon__error"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
-                        <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
-                      </svg>
-                      This email is invalid. Make sure it's written like
-                      example@email.com
-                    </span>
-                  ) : null
-                }
-              >
-                <div>
-                  <Lable text="Email" id="signup-email"></Lable>
-                  <InputField
-                    id="signup-email"
-                    placeholder="name@domain.com"
-                    className="signup__input"
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <CustomButton
-                  text="Next"
-                  onClick={handleNext}
-                  className="btn btn--signup"
-                  htmlType="submit"
-                  type="primary"
-                />
-              </Form.Item>
-            </Form>
-          )}
-
-          {currentStep === 2 && (
-            <Form
-              className="signup__form"
-              name="signup"
-              initialValues={{ remember: true }}
-              layout="vertical"
-            >
-              <Form.Item
-                className="signup__form-item-group"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <span className="signup__form-item-error">
-                        <svg
-                          width="24"
-                          data-encore-id="icon"
-                          role="img"
-                          aria-label="Error:"
-                          aria-hidden="true"
-                          className="icon__error"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
-                          <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
-                        </svg>
-                        10 characters minimum
-                      </span>
-                    ),
-                  },
-                ]}
-                validateStatus={
-                  debouncedPassword && !isPasswordValid ? "error" : ""
-                }
-                help={
-                  debouncedPassword && !isPasswordValid ? (
-                    <span className="signup__form-item-error">
-                      <svg
-                        width="24"
-                        data-encore-id="icon"
-                        role="img"
-                        aria-label="Error:"
-                        aria-hidden="true"
-                        className="icon__error"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
-                        <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
-                      </svg>
-                      10 characters minimum
-                    </span>
-                  ) : null
-                }
-              >
-                <div>
-                  <Lable text="Create passwords" id="signup-password"></Lable>
-                  <InputField
-                    id="signup-password"
-                    placeholder="password"
-                    className="signup__input"
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <CustomButton
-                  text="Next"
-                  onClick={handleNext}
-                  className="btn btn--signup"
-                  htmlType="submit"
-                  type="primary"
-                />
+          <div className="signup__header">
+            <h2 className="signup__step-title">
+              {currentStep === 1 && "Enter your email"}
+              {currentStep === 2 && "Create a password"}
+              {currentStep === 3 && "Enter your name"}
+            </h2>
+            <div className="signup__progress">
+              <div 
+                className="signup__progress-bar" 
+                style={{ width: `${(currentStep / 3) * 100}%` }}
+              />
+            </div>
+          </div>
+          
+          <Form
+            className="signup__form"
+            name="signup"
+            layout="vertical"
+          >
+            {renderStepContent()}
+            
+            <Form.Item>
+              <CustomButton
+                text={currentStep === 3 ? "Sign Up" : "Next"}
+                onClick={handleNext}
+                className="btn btn--signup"
+                htmlType="submit"
+                type="primary"
+              />
+              {currentStep > 1 && (
                 <CustomButton
                   text="Back"
                   onClick={handlePrevious}
                   className="btn btn--signup"
-                  htmlType="submit"
-                  type="primary"
+                  type="default"
                 />
-              </Form.Item>
-            </Form>
-          )}
-
-          {currentStep === 3 && (
-            <Form
-              className="signup__form"
-              name="signup"
-              initialValues={{ remember: true }}
-              layout="vertical"
-            >
-              <Form.Item
-                className="signup__form-item-group"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <span className="signup__form-item-error">
-                        <svg
-                          width="24"
-                          data-encore-id="icon"
-                          role="img"
-                          aria-label="Error:"
-                          aria-hidden="true"
-                          className="icon__error"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
-                          <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
-                        </svg>
-                        This email is invalid. Make sure it's written like
-                        example@email.com
-                      </span>
-                    ),
-                  },
-                ]}
-                validateStatus={debouncedName && !isNameValid ? "error" : ""}
-                help={
-                  debouncedName && !isNameValid ? (
-                    <span className="signup__form-item-error">
-                      <svg
-                        width="24"
-                        data-encore-id="icon"
-                        role="img"
-                        aria-label="Error:"
-                        aria-hidden="true"
-                        className="icon__error"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
-                        <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
-                      </svg>
-                      Enter a name for your profile.
-                    </span>
-                  ) : null
-                }
-              >
-                <div>
-                  <Lable text="Name" id="signup-name"></Lable>
-                  <InputField
-                    id="signup-name"
-                    placeholder="name"
-                    className="signup__input"
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-              </Form.Item>
-              <Form.Item>
-                <CustomButton
-                  text="Sign Up"
-                  onClick={handleNext}
-                  className="btn btn--signup"
-                  htmlType="submit"
-                  type="primary"
-                />
-                <CustomButton
-                  text="Back"
-                  onClick={handlePrevious}
-                  className="btn btn--signup"
-                  htmlType="submit"
-                  type="primary"
-                />
-              </Form.Item>
-            </Form>
-          )}
+              )}
+            </Form.Item>
+          </Form>
 
           <div className="signup__login-wrapper">
             <hr role="presentation" className="signup__line"></hr>
