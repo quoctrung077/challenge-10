@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { login as loginApi } from "../../services/api/authService.tsx";
+import {
+  login as loginApi,
+  signUp as signUpApi,
+} from "../../services/api/authService.tsx";
 
 interface User {
   email: string;
@@ -26,6 +29,20 @@ export const login = createAsyncThunk<
   }
 });
 
+export const signUp = createAsyncThunk<
+  { email: string; token: string },
+  { email: string; password: string; name: string },
+  { rejectValue: string }
+>("auth/signUp", async ({ email, password, name }, { rejectWithValue }) => {
+  try {
+    const data = await signUpApi(email, password, name);
+    return { email, token: data.token };
+  } catch (error) {
+    console.error("Sign Up error:", error);
+    return rejectWithValue("Sign Up failed");
+  }
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -48,6 +65,20 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    builder
+      .addCase(signUp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(signUp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

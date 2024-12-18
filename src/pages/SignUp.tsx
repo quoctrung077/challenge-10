@@ -1,31 +1,44 @@
 import { useState } from "react";
 import { Form, Typography } from "antd";
 import Lable from "../components/common/Lable/Lable";
+import ButtonBack from "../components/common/Button/ButtonBack.tsx";
 import CustomButton from "../components/common/Button/CustomButton.tsx";
 import InputField from "../components/common/Input/InputField.tsx";
 import useDebounce from "../hooks/useDebounce.tsx";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { signUp } from "../store/redux/authSlice.tsx";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 const SignUp: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
   const debouncedEmail = useDebounce(email, 500);
   const debouncedPassword = useDebounce(password, 500);
   const debouncedName = useDebounce(name, 500);
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(debouncedEmail);
   const isNameValid = debouncedName.length > 0;
-  const isPasswordValid = debouncedPassword.length >= 10;
+  const isPasswordValid = (debouncedPassword: string) => {
+    const passwordRegex =
+      /^(?=.*[a-zA-Z])(?=.*[\d!@#$%^&*(),.?":{}|<>])[a-zA-Z\d!@#$%^&*(),.?":{}|<>]{10,}$/;
+    return passwordRegex.test(debouncedPassword);
+  };
 
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<number>(0);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleNext = () => {
-    if (currentStep === 1 && isEmailValid) {
+    if (currentStep === 0 && isEmailValid) {
+      setCurrentStep(1);
+    } else if (currentStep === 1 && isPasswordValid(debouncedPassword)) {
       setCurrentStep(2);
-    } else if (currentStep === 2 && isPasswordValid) {
-      setCurrentStep(3);
-    } else if (currentStep === 3 && isEmailValid) {
+    } else if (currentStep === 2 && isNameValid) {
       console.log("signup successful");
     }
   };
@@ -34,32 +47,65 @@ const SignUp: React.FC = () => {
     setCurrentStep(currentStep - 1);
   };
 
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    const trimmedName = name.trim();
+    if (isEmailValid && isPasswordValid(trimmedPassword) && isNameValid) {
+      dispatch(
+        signUp({
+          email: trimmedEmail,
+          password: trimmedPassword,
+          name: trimmedName,
+        })
+      )
+        .unwrap()
+        .then(() => {
+          navigate("/");
+        });
+    }
+  };
   const steps = [
     {
-      title: `Step 1 of 3`,
-      description: 'Enter your email',
-    },
-    {
-      title: 'Step 2 of 3',
-      description: 'Create a password',
-    },
-    {
-      title: 'Step 3 of 3',
-      description: 'Enter your name',
-    },
-  ];
-
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <Form.Item
-            className="signup__form-item-group"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: (
+      content: (
+        <>
+          <h1 className="signup__title">Sign up to start listening</h1>
+          <Form
+            className="signup__form"
+            name="signup"
+            initialValues={{ remember: true }}
+            layout="vertical"
+          >
+            <Form.Item
+              className="signup__form-item-group"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <span className="signup__form-item-error">
+                      <svg
+                        width="24"
+                        data-encore-id="icon"
+                        role="img"
+                        aria-label="Error:"
+                        aria-hidden="true"
+                        className="icon__error"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
+                        <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
+                      </svg>
+                      This email is invalid. Make sure it's written like
+                      example@email.com
+                    </span>
+                  ),
+                },
+              ]}
+              validateStatus={debouncedEmail && !isEmailValid ? "error" : ""}
+              help={
+                debouncedEmail && !isEmailValid ? (
                   <span className="signup__form-item-error">
                     <svg
                       width="24"
@@ -73,83 +119,297 @@ const SignUp: React.FC = () => {
                       <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
                       <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
                     </svg>
-                    This email is invalid. Make sure it's written like example@email.com
+                    This email is invalid. Make sure it's written like
+                    example@email.com
                   </span>
-                ),
-              },
-            ]}
-            validateStatus={debouncedEmail && !isEmailValid ? "error" : ""}
-            help={debouncedEmail && !isEmailValid ? "This email is invalid" : null}
-          >
-            <div>
-              <Lable text="Email" id="signup-email"></Lable>
-              <InputField
-                id="signup-email"
-                placeholder="name@domain.com"
-                className="signup__input"
-                onChange={(e) => setEmail(e.target.value)}
+                ) : null
+              }
+            >
+              <div>
+                <Lable text="Email" id="signup-email"></Lable>
+                <InputField
+                  id="signup-email"
+                  placeholder="name@domain.com"
+                  className="signup__input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </Form.Item>
+            <Form.Item>
+              <CustomButton
+                text="Next"
+                onClick={handleNext}
+                className="btn btn--signup"
+                htmlType="submit"
+                type="primary"
+              />
+            </Form.Item>
+          </Form>
+          <div className="signup__login-wrapper">
+            <hr role="presentation" className="signup__line"></hr>
+            <Text className="signup__login-text">
+              Already have an account?
+              <a href="/" className="signup__login-link">
+                Log in here.
+              </a>
+            </Text>
+          </div>
+        </>
+      ),
+    },
+
+    {
+      content: (
+        <>
+          <div>
+            <div className="signup__progress">
+              <div
+                className="signup__progress-bar"
+                style={{ width: `${(currentStep / 2) * 100}%` }}
               />
             </div>
-          </Form.Item>
-        );
-
-      case 2:
-        return (
-          <Form.Item
-            className="signup__form-item-group"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Password is required",
-              },
-            ]}
-            validateStatus={debouncedPassword && !isPasswordValid ? "error" : ""}
-            help={debouncedPassword && !isPasswordValid ? "10 characters minimum" : null}
-          >
             <div>
-              <Lable text="Create password" id="signup-password"></Lable>
-              <InputField
-                id="signup-password"
-                type="password"
-                placeholder="Create a password"
-                className="signup__input"
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="signup__progress-title-btn-wrapper">
+                <ButtonBack onClick={handlePrevious} />
+                <span className="signup__progress-title">Step 1 of 2</span>
+                <span className="signup__progress-title signup__progress-title--color">
+                  Create a password
+                </span>
+              </div>
             </div>
-          </Form.Item>
-        );
+          </div>
 
-      case 3:
-        return (
-          <Form.Item
-            className="signup__form-item-group"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Name is required",
-              },
-            ]}
-            validateStatus={debouncedName && !isNameValid ? "error" : ""}
-            help={debouncedName && !isNameValid ? "Enter a name for your profile" : null}
+          <Form
+            className="signup__form"
+            name="signup"
+            initialValues={{ remember: true }}
+            layout="vertical"
           >
-            <div>
-              <Lable text="Name" id="signup-name"></Lable>
-              <InputField
-                id="signup-name"
-                placeholder="Enter your name"
-                className="signup__input"
-                onChange={(e) => setName(e.target.value)}
-              />
+            <Form.Item className="signup__form-item-group">
+              <div>
+                <Lable text="Password" id="signup-password"></Lable>
+                <InputField
+                  id="signup-password"
+                  placeholder="password"
+                  className="signup__input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </Form.Item>
+            <div className="password">
+              <Text className="password__text">
+                Your password must contain at least:
+              </Text>
+              <ul>
+                <li className="password__text--color ">
+                  {password.match(/[a-zA-Z]/) ? (
+                    <svg
+                      width="12"
+                      height="12"
+                      data-encore-id="icon"
+                      role="img"
+                      className="password__icon-check"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm11.748-1.97a.75.75 0 0 0-1.06-1.06l-4.47 4.47-1.405-1.406a.75.75 0 1 0-1.061 1.06l2.466 2.467 5.53-5.53z"></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      aria-hidden="true"
+                      width="12"
+                      height="12"
+                      data-testid="password_requirement_one_letter-false"
+                    >
+                      <ellipse
+                        cx="6"
+                        cy="6"
+                        rx="5.5"
+                        ry="5.5"
+                        stroke="#A7A7A7"
+                        strokeWidth="1"
+                        fill="none"
+                      ></ellipse>
+                    </svg>
+                  )}{" "}
+                  1 letter
+                </li>
+                <li className="password__text--color">
+                  {password.match(/\d|[!@#$%^&*]/) ? (
+                    <svg
+                      width="12"
+                      height="12"
+                      data-encore-id="icon"
+                      role="img"
+                      className="password__icon-check"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm11.748-1.97a.75.75 0 0 0-1.06-1.06l-4.47 4.47-1.405-1.406a.75.75 0 1 0-1.061 1.06l2.466 2.467 5.53-5.53z"></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      aria-hidden="true"
+                      width="12"
+                      height="12"
+                      data-testid="password_requirement_one_letter-false"
+                    >
+                      <ellipse
+                        cx="6"
+                        cy="6"
+                        rx="5.5"
+                        ry="5.5"
+                        stroke="#A7A7A7"
+                        strokeWidth="1"
+                        fill="none"
+                      ></ellipse>
+                    </svg>
+                  )}{" "}
+                  1 number or special character
+                </li>
+                <li className="password__text--color">
+                  {password.length >= 10 ? (
+                    <svg
+                      width="12"
+                      height="12"
+                      data-encore-id="icon"
+                      role="img"
+                      className="password__icon-check"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm11.748-1.97a.75.75 0 0 0-1.06-1.06l-4.47 4.47-1.405-1.406a.75.75 0 1 0-1.061 1.06l2.466 2.467 5.53-5.53z"></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      aria-hidden="true"
+                      width="12"
+                      height="12"
+                      data-testid="password_requirement_one_letter-false"
+                    >
+                      <ellipse
+                        cx="6"
+                        cy="6"
+                        rx="5.5"
+                        ry="5.5"
+                        stroke="#A7A7A7"
+                        strokeWidth="1"
+                        fill="none"
+                      ></ellipse>
+                    </svg>
+                  )}{" "}
+                  10 characters
+                </li>
+              </ul>
             </div>
-          </Form.Item>
-        );
+            <Form.Item>
+              <CustomButton
+                text="Next"
+                onClick={handleNext}
+                className="btn btn--signup"
+                type="primary"
+              />
+            </Form.Item>
+          </Form>
+        </>
+      ),
+    },
 
-      default:
-        return null;
-    }
-  };
+    {
+      content: (
+        <>
+          <div className="signup__progress">
+            <div
+              className="signup__progress-bar"
+              style={{ width: `${(currentStep / 2) * 100}%` }}
+            />
+          </div>
+          <div>
+            <div className="signup__progress-title-btn-wrapper">
+              <ButtonBack onClick={handlePrevious} />
+              <span className="signup__progress-title">Step 2 of 2</span>
+              <span className="signup__progress-title signup__progress-title--color">
+                Tell us about yourself
+              </span>
+            </div>
+          </div>
+
+          <Form
+            className="signup__form"
+            name="signup"
+            initialValues={{ remember: true }}
+            layout="vertical"
+          >
+            <Form.Item
+              className="signup__form-item-group"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <span className="signup__form-item-error">
+                      <svg
+                        width="24"
+                        data-encore-id="icon"
+                        role="img"
+                        aria-label="Error:"
+                        aria-hidden="true"
+                        className="icon__error"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
+                        <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
+                      </svg>
+                      Enter a name for your profile.
+                    </span>
+                  ),
+                },
+              ]}
+              validateStatus={debouncedName && !isNameValid ? "error" : ""}
+              help={
+                debouncedName && !isNameValid ? (
+                  <span className="signup__form-item-error">
+                    <svg
+                      width="24"
+                      data-encore-id="icon"
+                      role="img"
+                      aria-label="Error:"
+                      aria-hidden="true"
+                      className="icon__error"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
+                      <path d="M7.25 9V4h1.5v5h-1.5zm0 3.026v-1.5h1.5v1.5h-1.5z"></path>
+                    </svg>
+                    Enter a name for your profile.
+                  </span>
+                ) : null
+              }
+            >
+              <div>
+                <Lable text="Name" id="signup-name"></Lable>
+                <InputField
+                  id="signup-name"
+                  placeholder="name"
+                  className="signup__input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </Form.Item>
+            <Form.Item>
+              <CustomButton
+                text="Sign Up"
+                onClick={handleSubmit}
+                className="btn btn--signup"
+                htmlType="submit"
+                type="primary"
+              />
+            </Form.Item>
+          </Form>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="main">
@@ -174,58 +434,32 @@ const SignUp: React.FC = () => {
         </div>
       </header>
       <section className="signup">
-        <div className="signup__container">
-          <div className="signup__header">
-            <h2 className="signup__step-title">
-              {currentStep === 1 && "Enter your email"}
-              {currentStep === 2 && "Create a password"}
-              {currentStep === 3 && "Enter your name"}
-            </h2>
-            <div className="signup__progress">
-              <div 
-                className="signup__progress-bar" 
-                style={{ width: `${(currentStep / 3) * 100}%` }}
-              />
-            </div>
-          </div>
-          
-          <Form
-            className="signup__form"
-            name="signup"
-            layout="vertical"
-          >
-            {renderStepContent()}
-            
-            <Form.Item>
-              <CustomButton
-                text={currentStep === 3 ? "Sign Up" : "Next"}
-                onClick={handleNext}
-                className="btn btn--signup"
-                htmlType="submit"
-                type="primary"
-              />
-              {currentStep > 1 && (
-                <CustomButton
-                  text="Back"
-                  onClick={handlePrevious}
-                  className="btn btn--signup"
-                  type="default"
-                />
-              )}
-            </Form.Item>
-          </Form>
-
-          <div className="signup__login-wrapper">
-            <hr role="presentation" className="signup__line"></hr>
-            <Text className="signup__login-text">
-              Already have an account?
-              <a href="/" className="signup__login-link">
-                Log in here.
-              </a>
-            </Text>
-          </div>
-        </div>
+        <div className="signup__container">{steps[currentStep].content}</div>
       </section>
+      <footer className="signup__footer">
+        <span className="signup__footer-copyright">
+          <p className="signup__footer-paragraph">
+            This site is protected by reCAPTCHA and the Google
+            <br />
+            <a
+              href="https://policies.google.com/privacy"
+              className="signup__footer-link"
+            >
+              {" "}
+              Privacy Policy
+            </a>{" "}
+            and
+            <a
+              href="https://policies.google.com/terms"
+              className="signup__footer-link"
+            >
+              {" "}
+              Terms of Service
+            </a>{" "}
+            apply.
+          </p>
+        </span>
+      </footer>
     </div>
   );
 };
