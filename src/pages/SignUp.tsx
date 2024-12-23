@@ -193,6 +193,7 @@ const SignUp: React.FC = () => {
                   id="signup-password"
                   placeholder="password"
                   className="signup__input"
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

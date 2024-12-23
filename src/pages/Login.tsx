@@ -6,7 +6,7 @@ import { RootState, AppDispatch } from "../store";
 import Lable from "../components/common/Lable/Lable.tsx";
 import CustomButton from "../components/common/Button/CustomButton.tsx";
 import InputField from "../components/common/Input/InputField.tsx";
-
+import { useNavigate } from "react-router-dom";
 const { Text } = Typography;
 
 const Login: React.FC = () => {
@@ -16,11 +16,20 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleLogin = () => {
+  const navigate = useNavigate();
+  const handleLogin = async () => {
     if (email && password) {
       const trimmedEmail = email.trim();
       const trimmedPassword = password.trim();
-      dispatch(login({ email: trimmedEmail, password: trimmedPassword }));
+
+      try {
+        await dispatch(
+          login({ email: trimmedEmail, password: trimmedPassword })
+        ).unwrap();
+        navigate("/home");
+      } catch (err) {
+        console.error("Login failed:", err);
+      }
     }
   };
 

@@ -65,4 +65,98 @@
       transform: scale(1.04);
     }
   }
+  &__home {
+    color: #fff;
+    margin-inline-start: 8px;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    justify-content: center;
+    background-color: #1f1f1f;
+    color: #b3b3b3;
+    flex-shrink: 0;
+    min-inline-size: 0px;
+    min-block-size: 48px;
+    padding-block: 12px;
+    padding-inline: 12px !important;
+    vertical-align: middle;
+    transform: translate3d(0px, 0px, 0px);
+    transition-property: background-color, border-color, color, box-shadow,
+      filter, transform;
+    touch-action: manipulation;
+    transition-duration: 33ms;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    cursor: pointer;
+    position: relative;
+    border: 0px;
+    box-sizing: border-box;
+    &:hover {
+      background-color: #1f1f1f !important;
+      transform: scale(1.04);
+    }
+  }
+  &__icon-home {
+    fill: white;
+    width: var(--encore-graphic-size-decorative-base, 24px);
+    height: var(--encore-graphic-size-decorative-base, 24px);
+  }
+  &__dropdown-add {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    justify-content: center;
+    background-color: #1f1f1f;
+    color: #b3b3b3;
+    flex-shrink: 0;
+    min-inline-size: 0px;
+    min-block-size: 48px;
+    padding-block: 12px;
+    padding-inline: 12px !important;
+    vertical-align: middle;
+    transform: translate3d(0px, 0px, 0px);
+    transition-property: background-color, border-color, color, box-shadow,
+      filter, transform;
+    touch-action: manipulation;
+    transition-duration: 33ms;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    cursor: pointer;
+    position: relative;
+    border: 0px;
+    box-sizing: border-box;
+    &:hover {
+      background-color: #1f1f1f !important;
+      transform: scale(1.04);
+    }
+  }
+  &__icon-add {
+    fill: white;
+    width: var(--encore-graphic-size-decorative-base, 24px);
+    height: var(--encore-graphic-size-decorative-base, 24px);
+  }
+  &__dropdown {
+    .ant-dropdown-menu {
+      background-color: #1f1f1f;
+    }
+  }
+  &__add-artist {
+    background-color: #1f1f1f;
+    color: white;
+    border: none;
+    padding-inline: 2px;
+    &:hover {
+      background-color: #1f1f1f !important;
+      transform: scale(1.04);
+      color: white !important;
+    }
+  }
+  &__icon-plus {
+    fill: white;
+    width: 16px;
+    height: 16px;
+  }
 }

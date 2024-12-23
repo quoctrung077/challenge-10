@@ -13,6 +13,7 @@ interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
+  token: string | null;
 }
 
 export const login = createAsyncThunk<
@@ -48,11 +49,14 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     loading: false,
+    token: localStorage.getItem("authToken") || null,
     error: null,
   } as AuthState,
   reducers: {
     logout: (state) => {
       state.user = null;
+      state.token = null;
+      localStorage.removeItem("authToken");
     },
   },
   extraReducers: (builder) => {
@@ -62,7 +66,9 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
+        state.token = action.payload.token;
         state.user = action.payload;
+        localStorage.setItem("authToken", action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;

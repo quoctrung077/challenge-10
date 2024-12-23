@@ -1,0 +1,93 @@
+@use "../base/variables" as *;
+
+@media screen and (max-width: 768px) {
+  .header-nav {
+    &__search-container {
+      left: 15px !important;
+    }
+  }
+}
+
+.header-nav {
+  opacity: 1;
+  transition: opacity 0.3s ease-in;
+  display: flex;
+  align-items: center;
+  background-color: #000;
+  justify-content: space-between;
+
+  position: relative;
+  &__logo {
+    display: flex;
+    align-items: center;
+    flex-flow: row nowrap;
+    gap: 8px;
+    z-index: 1;
+  }
+
+  &__logo-link {
+    color: white;
+    text-decoration: none;
+    margin: 20px;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo-icon {
+    fill: #fff;
+    stroke: transparent;
+  }
+
+  &__search-container {
+    padding-inline: 8px;
+    display: flex;
+    left: 0;
+    position: absolute;
+    right: 0;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  &__search {
+    max-width: 546px;
+    min-width: 350px;
+    width: 50%;
+    display: flex;
+    align-items: center;
+  }
+  &__search-icon-input {
+    width: 100%;
+    position: relative;
+    padding-inline: 8px;
+  }
+  .IconContainer {
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    color: #b3b3b3;
+    inset-inline-start: 12px;
+    z-index: 1;
+    .button-icon-search {
+      display: none;
+      padding-inline: 12px;
+      .iconwrapper__wrapper {
+        display: flex;
+        .search__icon {
+          display: block;
+          height: 24px;
+          width: 24px;
+          fill: currentColor;
+        }
+      }
+    }
+    .search__icon2 {
+      padding-inline: 8px;
+    }
+  }
+}
