@@ -26,7 +26,7 @@ const Login: React.FC = () => {
         await dispatch(
           login({ email: trimmedEmail, password: trimmedPassword })
         ).unwrap();
-        navigate("/home");
+        navigate("/");
       } catch (err) {
         console.error("Login failed:", err);
       }

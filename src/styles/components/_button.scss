@@ -13,6 +13,9 @@
   &__text {
     font-size: 1rem;
     font-weight: 700;
+    &.collapsed {
+      display: none;
+    }
   }
   &--login:hover {
     background: #3be477 !important;
@@ -158,5 +161,112 @@
     fill: white;
     width: 16px;
     height: 16px;
+  }
+  &__wrapper-text-icon {
+    display: flex;
+    height: 40px;
+    justify-content: flex-start;
+    min-block-size: 40px;
+    padding: 4px 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: none;
+    box-shadow: none;
+    color: #b3b3b3;
+    font-weight: 700;
+    font-size: 1rem;
+    background-color: #121212;
+    &:hover {
+      color: #b3b3b3 !important;
+      background-color: #121212 !important;
+    }
+    &.show {
+      transform: rotate(180deg);
+    }
+    &.collapsed {
+      display: none;
+    }
+  }
+  &__icon-collapse {
+    fill: currentcolor;
+    width: var(--encore-graphic-size-decorative-base, 24px);
+    height: var(--encore-graphic-size-decorative-base, 24px);
+  }
+  &__icon-show {
+    fill: currentcolor;
+    width: var(--encore-graphic-size-decorative-smaller, 16px);
+    height: var(--encore-graphic-size-decorative-smaller, 16px);
+  }
+
+  &__create_playlist {
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    justify-content: center;
+    background: none !important;
+    flex-shrink: 0;
+    min-inline-size: 0px;
+    min-block-size: 40px;
+    padding-block: 12px;
+    padding-inline: 12px !important;
+    vertical-align: middle;
+    transform: translate3d(0px, 0px, 0px);
+    transition-property: background-color, border-color, color, box-shadow,
+      filter, transform;
+    touch-action: manipulation;
+    transition-duration: 33ms;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    cursor: pointer;
+    position: relative;
+    border: 0px;
+    box-sizing: border-box;
+    color: #b3b3b3;
+    &:hover {
+      color: #b3b3b3 !important;
+      background-color: #1f1f1f !important;
+      transform: scale(1.04);
+    }
+  }
+
+  &__icon-create-playlist {
+    fill: currentcolor;
+    width: 16px;
+    height: 16px;
+  }
+  &__play {
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    justify-content: center;
+    background-color: #1ed760;
+    flex-shrink: 0;
+    min-inline-size: 0px;
+    min-block-size: 48px;
+    padding-block: 12px;
+    padding-inline: 12px !important;
+    vertical-align: middle;
+    transform: translate3d(0px, 0px, 0px);
+    transition-property: background-color, border-color, color, box-shadow,
+      filter, transform;
+    touch-action: manipulation;
+    transition-duration: 33ms;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    cursor: pointer;
+    position: relative;
+    border: 0px;
+    box-sizing: border-box;
+    &:hover {
+      background-color: #3be477 !important;
+      transform: scale(1.04);
+    }
+  }
+
+  &__icon-play {
+    width: var(--encore-graphic-size-decorative-base, 24px);
+    height: var(--encore-graphic-size-decorative-base, 24px);
   }
 }

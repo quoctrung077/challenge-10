@@ -1,0 +1,39 @@
+.view-playlist {
+  width: 100%;
+  &__header {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    background: linear-gradient(transparent 0, rgba(0, 0, 0, 0.5) 100%);
+  }
+
+  &__header {
+    padding: 20px;
+  }
+
+  &__avatar {
+    border-radius: 8px;
+    margin-right: 24px;
+  }
+
+  &__wrapper-title {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    line-height: 0%;
+    &--font-size {
+      font-size: 6rem;
+      color: white;
+    }
+  }
+
+  &__play {
+    padding-inline: 20px;
+  }
+}
