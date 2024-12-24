@@ -10,6 +10,13 @@
   justify-content: center;
   align-items: center;
   transition: transform 0.3s ease, background-color 0.3s ease;
+  &:hover {
+    background: #3be477 !important;
+    transform: scale(1.04);
+  }
+  &__save {
+    padding-inline: 32px;
+  }
   &__text {
     font-size: 1rem;
     font-weight: 700;
@@ -266,6 +273,24 @@
   }
 
   &__icon-play {
+    width: var(--encore-graphic-size-decorative-base, 24px);
+    height: var(--encore-graphic-size-decorative-base, 24px);
+  }
+
+  &__dropdown-playlist {
+    background: none !important;
+    border: none;
+    border-radius: 50%;
+    margin-left: 8px;
+    color: #b3b3b3;
+    &:hover {
+      color: white !important;
+      transform: scale(1.04);
+    }
+  }
+
+  &__icon-dropdown-playlist {
+    fill: currentColor;
     width: var(--encore-graphic-size-decorative-base, 24px);
     height: var(--encore-graphic-size-decorative-base, 24px);
   }

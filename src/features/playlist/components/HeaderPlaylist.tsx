@@ -56,7 +56,9 @@ const HeaderPlaylist: React.FC<HeaderPlaylistProps> = ({
           </Button>
         </div>
         <ButtonCreatePlaylist
-          className="btn__create_playlist"
+          className={`btn__wrapper-text-icon ${isCollapse ? "collapsed" : ""} ${
+            isShow ? "show" : ""
+          }`}
           handleAddPlaylist={handleAddPlaylist}
         />
         <Button

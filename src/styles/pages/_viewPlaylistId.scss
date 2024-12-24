@@ -34,6 +34,8 @@
   }
 
   &__play {
+    display: flex;
+    align-items: center;
     padding-inline: 20px;
   }
 }

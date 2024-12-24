@@ -1,4 +1,5 @@
 import { List, Avatar, Typography, Button } from "antd";
+import ModalPlaylist from "../features/playlist/components/ModalPlaylist.tsx";
 
 const { Text } = Typography;
 const ViewPlaylistId = () => {
@@ -37,6 +38,7 @@ const ViewPlaylistId = () => {
             </span>
           </span>
         </Button>
+        <ModalPlaylist />
       </div>
 
       {/* Song List */}
