@@ -1,43 +1,76 @@
-import React from "react";
-import { Form, Input, Checkbox } from "antd";
-import CustomButton from "../../../components/common/Button/CustomButton";
-interface EditDetailFormProps {
-  initialValues?: {
-    playlistName: string;
-    Description: string;
-    isPublic: boolean;
-  };
-  onSubmit: (values: {
-    playlistName: string;
-    Description: string;
-    isPublic: boolean;
-  }) => void;
+import { Form, Input, Checkbox, message } from "antd";
+import Button from "../../../components/common/Button/Button";
+import {
+  updatePlaylistApi,
+  fetchPlaylistById,
+} from "../../../services/api/playlistService";
+import { useEffect } from "react";
+
+interface EditFormPlaylistProps {
+  playlistId: string;
+  onSuccess?: () => void;
+  onClose: () => void;
 }
 
-const EditFormPlaylist: React.FC<EditDetailFormProps> = ({
-  initialValues,
-  onSubmit,
+interface PlaylistFormValues {
+  playlistName: string;
+  description: string;
+  isPublic: boolean;
+}
+
+const EditFormPlaylist: React.FC<EditFormPlaylistProps> = ({
+  playlistId,
+  onSuccess,
+  onClose,
 }) => {
   const [form] = Form.useForm();
 
-  const handleFinish = (values: {
-    playlistName: string;
-    Description: string;
-    isPublic: boolean;
-  }) => {
-    onSubmit(values);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchPlaylistById(playlistId);
+        if (response.success && response.data) {
+          form.setFieldsValue({
+            playlistName: response.data.name,
+            description: response.data.description,
+            isPublic: response.data.isPublic,
+          });
+        } else {
+          message.error("Failed to load playlist data");
+        }
+      } catch {
+        message.error("Failed to load playlist data");
+      }
+    };
+    fetchData();
+  }, [playlistId, form]);
+
+  const onFinish = async (values: PlaylistFormValues) => {
+    try {
+      await updatePlaylistApi(playlistId, {
+        name: values.playlistName,
+        description: values.description,
+        isPublic: values.isPublic,
+      });
+      message.success("Playlist updated successfully!");
+      if (onSuccess) {
+        onSuccess();
+      }
+      onClose();
+    } catch {
+      message.error("Failed to update playlist");
+    }
   };
 
   return (
     <Form
       form={form}
-      onFinish={handleFinish}
       layout="horizontal"
       labelCol={{ span: 6, style: { textAlign: "start" } }}
       wrapperCol={{ span: 18 }}
-      initialValues={initialValues}
       requiredMark={false}
       style={{ color: "#fff" }}
+      onFinish={onFinish}
     >
       <hr style={{ margin: "20px 0" }} />
       <Form.Item
@@ -58,7 +91,7 @@ const EditFormPlaylist: React.FC<EditDetailFormProps> = ({
 
       <Form.Item
         label={<span style={{ color: "#fff" }}>Description</span>}
-        name="Description"
+        name="description"
         rules={[{ required: true, message: "Please enter the description!" }]}
       >
         <Input
@@ -79,15 +112,10 @@ const EditFormPlaylist: React.FC<EditDetailFormProps> = ({
       >
         <Checkbox className="custom-checkbox" />
       </Form.Item>
+
       <hr style={{ margin: "20px 0" }} />
       <Form.Item className="ant-form-item__footer">
-        <CustomButton
-          className="btn btn__save"
-          text="Save"
-          type="primary"
-          htmlType="submit"
-          block
-        />
+        <Button className="btn btn__delete" text="Save" htmlType="submit" />
       </Form.Item>
     </Form>
   );

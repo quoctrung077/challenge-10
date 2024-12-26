@@ -1,36 +1,60 @@
+import React, { useState, useEffect } from "react";
+import { Row, Col, Spin, message } from "antd";
 import HeaderPlaylist from "../../features/playlist/components/HeaderPlaylist.tsx";
 import CardPlaylist from "../../features/playlist/components/CardPlaylist.tsx";
-import { useState } from "react";
-import { Row, Col } from "antd";
+import { useNavigate } from "react-router-dom";
+import {
+  addPlaylistApi,
+  getAllPlaylistsApi,
+} from "../../services/api/playlistService";
 
 interface Playlist {
-  id: number;
-  imageUrl: string;
-  title: string;
+  id: string;
+  name: string;
 }
+
 const SidebarPlaylist: React.FC = () => {
   const [isShow, setIsShow] = useState(false);
   const [isCollapse, setIsCollapse] = useState(false);
-  const [playlists, setPlaylists] = useState<Playlist[]>([
-    {
-      id: 1,
-      imageUrl: "https://via.placeholder.com/240",
-      title: "abc",
-    },
-    {
-      id: 2,
-      imageUrl: "https://via.placeholder.com/240",
-      title: "abc",
-    },
-  ]);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleAddPlaylist = () => {
-    const newPlaylist: Playlist = {
-      id: playlists.length + 1,
-      imageUrl: "https://via.placeholder.com/240",
-      title: `New Playlist ${playlists.length + 1}`,
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      setLoading(true);
+      try {
+        const response = await getAllPlaylistsApi();
+        setPlaylists(response);
+      } finally {
+        setLoading(false);
+      }
     };
-    setPlaylists([...playlists, newPlaylist]);
+
+    fetchPlaylists();
+  }, []);
+
+  const handleAddPlaylist = async () => {
+    setLoading(true);
+    const newPlaylistData = {
+      name: `New Playlist ${playlists.length + 1}`,
+      description: "Mô tả mặc định cho playlist",
+      isPublic: true,
+    };
+
+    try {
+      const newPlaylistResponse = await addPlaylistApi(newPlaylistData);
+
+      const newPlaylist: Playlist = {
+        id: String(newPlaylistResponse.id),
+        name: newPlaylistResponse.name,
+      };
+
+      setPlaylists([newPlaylist, ...playlists]);
+      message.success("Playlist added successfully!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleShowChange = (newShowState: boolean) => {
@@ -40,6 +64,11 @@ const SidebarPlaylist: React.FC = () => {
   const handleCollapseChange = (newCollapseState: boolean) => {
     setIsCollapse(newCollapseState);
   };
+
+  const handleCardClick = (playlistId: string) => {
+    navigate(`/playlist/${playlistId}`);
+  };
+
   return (
     <div
       className={`sidebar-playlist ${isShow ? "show" : ""} ${
@@ -53,23 +82,27 @@ const SidebarPlaylist: React.FC = () => {
         onCollapseChange={handleCollapseChange}
         handleAddPlaylist={handleAddPlaylist}
       />
-      <div>
-        <Row
-          gutter={[16, 16]}
-          className={`sidebar-playlist__list-grid ${
-            isCollapse ? "collapsed" : ""
-          } `}
-        >
-          {playlists.map((playlist) => (
-            <Col key={playlist.id} span={isCollapse ? 24 : isShow ? 12 : 8}>
-              <CardPlaylist
-                imageUrl={playlist.imageUrl}
-                title={playlist.title}
-                width="160"
-              />
-            </Col>
-          ))}
-        </Row>
+      <div className="sidebar-playlist__list">
+        {loading ? (
+          <Spin size="large" />
+        ) : (
+          <Row
+            gutter={[16, 16]}
+            className={`sidebar-playlist__list-grid ${
+              isCollapse ? "collapsed" : ""
+            }`}
+          >
+            {playlists.map((playlist) => (
+              <Col key={playlist.id} span={isCollapse ? 24 : isShow ? 12 : 8}>
+                <CardPlaylist
+                  title={playlist.name}
+                  width="160"
+                  onClick={() => handleCardClick(playlist.id)}
+                />
+              </Col>
+            ))}
+          </Row>
+        )}
       </div>
     </div>
   );

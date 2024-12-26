@@ -294,4 +294,34 @@
     width: var(--encore-graphic-size-decorative-base, 24px);
     height: var(--encore-graphic-size-decorative-base, 24px);
   }
+
+  &__delete-wrapper {
+    display: flex;
+    margin-top: 24px;
+    gap: 16px;
+
+    justify-content: flex-end;
+  }
+
+  &__delete {
+    min-block-size: 48px;
+    padding-inline: 32px;
+    width: fit-content !important;
+
+    &:hover {
+      color: currentColor !important;
+    }
+  }
+  &__cancel {
+    min-block-size: 48px;
+    padding-inline: 32px;
+    width: fit-content !important;
+    background: none;
+    color: white;
+    width: fit-content;
+    &:hover {
+      color: white !important;
+      background: none !important;
+    }
+  }
 }

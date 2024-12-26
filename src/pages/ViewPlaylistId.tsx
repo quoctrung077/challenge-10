@@ -1,8 +1,41 @@
-import { List, Avatar, Typography, Button } from "antd";
+import { List, Avatar, Typography, Button, Spin } from "antd";
 import ModalPlaylist from "../features/playlist/components/ModalPlaylist.tsx";
-
+import {
+  fetchPlaylistById,
+  PlaylistResponse,
+} from "../services/api/playlistService.tsx";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 const { Text } = Typography;
 const ViewPlaylistId = () => {
+  const { id } = useParams();
+  const [playlist, setPlaylist] = useState<PlaylistResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const token = localStorage.getItem("authToken") || "";
+
+  useEffect(() => {
+    const getPlaylistDetails = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchPlaylistById(id!, token);
+
+        setPlaylist(response.data);
+      } catch {
+        setError("Failed to fetch playlist details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      getPlaylistDetails();
+    }
+  }, [id, token]);
+
+  if (loading) return <Spin size="large" />;
+  if (error) return <div>{error}</div>;
   return (
     <div className="view-playlist">
       <div className="view-playlist__header">
@@ -14,7 +47,9 @@ const ViewPlaylistId = () => {
         <div className="view-playlist__wrapper-title">
           <Text className=" view-playlist__title">Playlist</Text>
           <Text className="view-playlist__title--font-size" strong>
-            Playlist Name
+            {playlist?.name?.trim()
+              ? playlist.name
+              : "Tên playlist không có sẵn"}
           </Text>
           <Text className=" view-playlist__title">
             Playlist - 1 Songs, 4:26 mins
