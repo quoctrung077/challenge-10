@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import ButtonCreatePlaylist from "../../../components/common/Button/ButtonCreateplaylist.tsx";
+import ButtonCreatePlaylist from "../../../components/common/Button/ButtonCreatePlaylist.tsx";
 
 interface HeaderPlaylistProps {
   isShow: boolean;

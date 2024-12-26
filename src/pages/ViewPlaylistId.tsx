@@ -13,13 +13,13 @@ const ViewPlaylistId = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const token = localStorage.getItem("authToken") || "";
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const getPlaylistDetails = async () => {
       setLoading(true);
       try {
-        const response = await fetchPlaylistById(id!, token);
+        const response = await fetchPlaylistById(id!);
 
         setPlaylist(response.data);
       } catch {
@@ -32,10 +32,12 @@ const ViewPlaylistId = () => {
     if (id) {
       getPlaylistDetails();
     }
-  }, [id, token]);
+  }, [id]);
 
   if (loading) return <Spin size="large" />;
   if (error) return <div>{error}</div>;
+
+  const isCreator = userId === playlist?.userId;
   return (
     <div className="view-playlist">
       <div className="view-playlist__header">
@@ -73,7 +75,7 @@ const ViewPlaylistId = () => {
             </span>
           </span>
         </Button>
-        <ModalPlaylist />
+        {isCreator && <ModalPlaylist />}
       </div>
 
       {/* Song List */}

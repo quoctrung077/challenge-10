@@ -36,15 +36,11 @@ export const addPlaylist = createAsyncThunk(
       name,
       description,
       isPublic,
-      token,
     }: { name: string; description: string; isPublic: boolean; token: string },
     { rejectWithValue }
   ) => {
     try {
-      const response = await addPlaylistApi(
-        { name, description, isPublic },
-        token
-      );
+      const response = await addPlaylistApi({ name, description, isPublic });
       return response;
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -58,9 +54,9 @@ export const addPlaylist = createAsyncThunk(
 // Lấy All Playlist
 export const fetchPlaylists = createAsyncThunk(
   "playlist/fetchPlaylists",
-  async (token: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await getAllPlaylistsApi(token);
+      const response = await getAllPlaylistsApi();
       return response;
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -79,7 +75,6 @@ export const updatePlaylist = createAsyncThunk(
       name,
       description,
       isPublic,
-      token,
     }: {
       id: string;
       name: string;
@@ -90,11 +85,11 @@ export const updatePlaylist = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await updatePlaylistApi(
-        id,
-        { name, description, isPublic },
-        token
-      );
+      const response = await updatePlaylistApi(id, {
+        name,
+        description,
+        isPublic,
+      });
       return response;
     } catch (error) {
       const axiosError = error as AxiosError;

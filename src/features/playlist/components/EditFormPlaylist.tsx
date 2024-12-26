@@ -48,8 +48,8 @@ const EditFormPlaylist: React.FC<EditFormPlaylistProps> = ({
   const onFinish = async (values: PlaylistFormValues) => {
     try {
       await updatePlaylistApi(playlistId, {
-        name: values.playlistName,
-        description: values.description,
+        name: values.playlistName.trim().replace(/\s+/g, " "),
+        description: values.description.trim().replace(/\s+/g, " "),
         isPublic: values.isPublic,
       });
       message.success("Playlist updated successfully!");
@@ -57,6 +57,7 @@ const EditFormPlaylist: React.FC<EditFormPlaylistProps> = ({
         onSuccess();
       }
       onClose();
+      window.location.reload();
     } catch {
       message.error("Failed to update playlist");
     }
