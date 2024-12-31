@@ -6,6 +6,7 @@ interface InputFieldProps {
   className?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  value?: string;
 }
 
 const InputField = ({
@@ -14,6 +15,7 @@ const InputField = ({
   className = "",
   onChange,
   type = "text",
+  value,
 }: InputFieldProps) => {
   return (
     <Input
@@ -23,6 +25,7 @@ const InputField = ({
       className={className}
       onChange={onChange}
       autoFocus={false}
+      value={value}
     />
   );
 };

@@ -2,10 +2,10 @@ import { Button as AntdButton, ButtonProps as AntdButtonProps } from "antd";
 
 type CustomButtonProps = {
   text: string;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
   type: string;
-  htmlType: string;
+  htmlType?: string;
   className?: string;
 } & AntdButtonProps;
 
