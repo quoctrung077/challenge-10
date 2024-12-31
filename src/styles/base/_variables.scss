@@ -1,0 +1,11 @@
+$background-base: #121212;
+$text-base: #ffffff;
+$essential-subdued: #7c7c7c;
+$essential-base: #ffffff;
+
+:root {
+  --background-base: #{$background-base};
+  --text-base: #{$text-base};
+  --essential-subdued: #{$essential-subdued};
+  --essential-base: #{$essential-base};
+}
