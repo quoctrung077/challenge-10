@@ -2,14 +2,14 @@ import { Button as AntdButton, ButtonProps as AntdButtonProps } from "antd";
 
 type CustomButtonProps = {
   text: string;
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  onclick?: () => void;
   disabled?: boolean;
   type?: string;
   htmlType?: string;
   className?: string;
 } & AntdButtonProps;
 
-const CustomButton = ({
+const Button = ({
   text,
   onClick,
   disabled,
@@ -34,4 +34,4 @@ const CustomButton = ({
   );
 };
 
-export default CustomButton;
+export default Button;

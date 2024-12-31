@@ -5,6 +5,7 @@ import {
 } from "../../services/api/authService.tsx";
 
 interface User {
+  id: string;
   email: string;
   token: string;
 }
@@ -17,15 +18,20 @@ interface AuthState {
 }
 
 export const login = createAsyncThunk<
-  { email: string; token: string },
+  { email: string; token: string; user: User },
   { email: string; password: string },
   { rejectValue: string }
 >("auth/login", async ({ email, password }, { rejectWithValue }) => {
   try {
     const data = await loginApi(email, password);
-    return { email, token: data.token };
-  } catch (error) {
-    console.error("Login error:", error);
+    if (data && data.user && data.user.id) {
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("userId", data.user.id);
+      return { email: data.user.email, token: data.token, user: data.user };
+    } else {
+      return rejectWithValue("User data is invalid");
+    }
+  } catch {
     return rejectWithValue("Login failed");
   }
 });
@@ -38,8 +44,7 @@ export const signUp = createAsyncThunk<
   try {
     const data = await signUpApi(email, password, name);
     return { email, token: data.token };
-  } catch (error) {
-    console.error("Sign Up error:", error);
+  } catch {
     return rejectWithValue("Sign Up failed");
   }
 });
@@ -67,8 +72,9 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.token;
-        state.user = action.payload;
+        state.user = action.payload.user;
         localStorage.setItem("authToken", action.payload.token);
+        localStorage.setItem("userId", action.payload.user.id);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -82,7 +88,12 @@ const authSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = {
+          id: "",
+          email: action.payload.email,
+          token: action.payload.token,
+        };
+        state.token = action.payload.token;
       })
       .addCase(signUp.rejected, (state, action) => {
         state.loading = false;

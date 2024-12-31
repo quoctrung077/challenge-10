@@ -1,11 +1,5 @@
-import ViewPlaylistId from "../pages/ViewPlaylistId.tsx";
-
 const Home: React.FC = () => {
-  return (
-    <>
-      <ViewPlaylistId />
-    </>
-  );
+  return <></>;
 };
 
 export default Home;
