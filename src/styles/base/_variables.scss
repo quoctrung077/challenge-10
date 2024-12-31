@@ -2,10 +2,15 @@ $background-base: #121212;
 $text-base: #ffffff;
 $essential-subdued: #7c7c7c;
 $essential-base: #ffffff;
-
+$panel-gap: 8px;
+$encore-graphic-size-decorative-base: 24px;
+$encore-spacing-tighter: 12px;
 :root {
   --background-base: #{$background-base};
   --text-base: #{$text-base};
   --essential-subdued: #{$essential-subdued};
   --essential-base: #{$essential-base};
+  --panel-gap: #{$panel-gap};
+  --encore-graphic-size-decorative-base: #{$encore-graphic-size-decorative-base};
+  --encore-spacing-tighter: #{$encore-spacing-tighter};
 }

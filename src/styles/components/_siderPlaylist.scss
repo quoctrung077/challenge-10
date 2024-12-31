@@ -1,0 +1,26 @@
+.sidebar-playlist {
+  background-color: #121212;
+  width: 548px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 8px;
+  &.show {
+    width: 360px;
+  }
+  &.collapsed {
+    width: 72px;
+  }
+  &__list-grid {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0 4px 4px;
+    &.collapsed {
+      margin: 0;
+      padding: 0 4px 4px;
+      .ant-col {
+        padding: 0;
+      }
+    }
+  }
+}
